@@ -4,6 +4,12 @@
     style="background-image: url('/assets/endScreen.png');"
   >
     <h1 class="text-5xl font-bold text-white mb-8">La partie est terminée !</h1>
+    <div v-if="winningTeam" class="mb-4">
+      <h2 class="text-3xl font-bold text-yellow-300">
+        🏆 Félicitations à l'équipe {{ winningTeam.name }} !
+      </h2>
+      <p class="text-xl text-white">Score : {{ winningTeam.score }}</p>
+    </div>
     <div class="mb-8">
       <ScoreBoard :teams="teams" />
     </div>
@@ -26,6 +32,13 @@ export default {
     teams: {
       type: Array,
       required: true
+    }
+  },
+  computed: {
+    winningTeam() {
+      if (!this.teams || this.teams.length === 0) return null;
+      // Trouve l'équipe avec le score le plus élevé
+      return this.teams.reduce((max, team) => (team.score > max.score ? team : max), this.teams[0]);
     }
   },
   methods: {
