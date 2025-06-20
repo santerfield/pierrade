@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col min-h-screen w-full bg-gradient-to-br from-indigo-900 via-indigo-700 to-yellow-400 text-white">
+  <div class="flex flex-col min-h-screen w-full bg-gradient-to-br from-indigo-900 via-indigo-700 to-yellow-400 text-white relative">
     <!-- Transition animée entre les phases -->
     <CountdownTransition
       v-if="showTransition"
@@ -32,6 +32,11 @@
       @finishDuel="handleFinishDuel"
       class="flex-1 w-full"
     />
+
+    <!-- Scoreboard toujours visible en bas -->
+    <div class="w-full max-w-3xl mx-auto px-4 py-2">
+      <ScoreBoard :teams="teams" />
+    </div>
   </div>
 </template>
 
@@ -40,6 +45,7 @@ import RapidPhase from '../components/RapidPhase.vue';
 import TurnPhase from '../components/TurnPhase.vue';
 import DuelPhase from '../components/DuelPhase.vue';
 import CountdownTransition from '../components/CountdownTransition.vue';
+import ScoreBoard from '../components/ScoreBoard.vue';
 
 export default {
   name: 'GamePage',
@@ -47,7 +53,8 @@ export default {
     RapidPhase,
     TurnPhase,
     DuelPhase,
-    CountdownTransition
+    CountdownTransition,
+    ScoreBoard
   },
   props: {
     teams: {
@@ -106,7 +113,6 @@ export default {
 </script>
 
 <style scoped>
-/* Responsive et sans scroll parasite */
 .flex-1 {
   min-height: 0;
 }
