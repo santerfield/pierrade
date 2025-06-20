@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col items-center justify-center h-screen bg-cover bg-center"
+    class="flex flex-col items-center justify-center min-h-screen w-full bg-cover bg-center p-4"
     style="background-image: url('/assets/endScreen.png');"
   >
     <h1 class="text-5xl font-bold text-white mb-8">La partie est terminée !</h1>

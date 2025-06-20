@@ -1,25 +1,36 @@
 <template>
-  <div class="w-screen h-screen relative">
-    <!-- Transition entre les phases -->
-    <CountdownTransition v-if="showTransition" @transitionComplete="nextPhase" />
+  <div class="flex flex-col min-h-screen w-full bg-gradient-to-br from-indigo-900 via-indigo-700 to-yellow-400 text-white">
+    <!-- Transition animée entre les phases -->
+    <CountdownTransition
+      v-if="showTransition"
+      @transitionComplete="nextPhase"
+      class="absolute inset-0 z-20"
+    />
 
-    <!-- Affichage conditionnel selon la phase en cours -->
+    <!-- PHASE RAPIDE -->
     <RapidPhase
       v-if="currentPhase === 'rapid'"
       :teams="teams"
       :sharedQuestion="currentQuestion"
       @finishRapid="handleFinishRapid"
+      class="flex-1 w-full"
     />
+
+    <!-- PHASE TOUR DE TABLE -->
     <TurnPhase
       v-else-if="currentPhase === 'turn'"
       :teams="teams"
       :sharedQuestion="currentQuestion"
       @finishTurn="handleFinishTurn"
+      class="flex-1 w-full"
     />
+
+    <!-- PHASE DUEL -->
     <DuelPhase
       v-else-if="currentPhase === 'duel'"
       :teams="teams"
       @finishDuel="handleFinishDuel"
+      class="flex-1 w-full"
     />
   </div>
 </template>
@@ -46,41 +57,40 @@ export default {
     gameRounds: {
       type: Number,
       required: true
+    },
+    sharedQuestion: {
+      type: Object,
+      required: false
     }
   },
   data() {
     return {
-      currentQuestion: {
-        question: "Question placeholder pour le round",
+      currentQuestion: this.sharedQuestion || {
+        question: "Question de démonstration",
         answers: [
           { text: "Réponse 1", points: 10, revealed: false },
           { text: "Réponse 2", points: 20, revealed: false },
           { text: "Réponse 3", points: 30, revealed: false },
           { text: "Réponse 4", points: 5, revealed: false },
-          { text: "Réponse 5", points: 15, revealed: false },
-          { text: "Réponse 6", points: 25, revealed: false },
-          { text: "Réponse 7", points: 35, revealed: false },
-          { text: "Réponse 8", points: 8, revealed: false },
-          { text: "Réponse 9", points: 18, revealed: false },
-          { text: "Réponse 10", points: 28, revealed: false }
+          { text: "Réponse 5", points: 15, revealed: false }
         ]
       },
-      currentPhase: 'rapid',
+      currentPhase: 'rapid', // 'rapid' | 'turn' | 'duel'
       showTransition: false,
       nextPhaseName: ''
     };
   },
   methods: {
     handleFinishRapid(data) {
-      console.log("Fin de la phase de rapidité", data);
+      // Traite la fin de la phase rapide
       this.startTransition("turn");
     },
     handleFinishTurn(data) {
-      console.log("Fin de la phase de tour de table", data);
+      // Traite la fin de la phase tour de table
       this.startTransition("duel");
     },
     handleFinishDuel(data) {
-      console.log("Fin de la phase de duel", data);
+      // Traite la fin de la phase duel et termine la manche
       this.$emit("finishRound", data);
     },
     startTransition(nextPhase) {
@@ -96,5 +106,8 @@ export default {
 </script>
 
 <style scoped>
-/* Styles optionnels */
+/* Responsive et sans scroll parasite */
+.flex-1 {
+  min-height: 0;
+}
 </style>

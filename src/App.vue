@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen h-screen">
+  <div class="min-h-screen w-full">
     <!-- Affichage de la page d'accueil -->
     <HomePage v-if="currentView === 'home'" @startGame="handleStartGame" />
 
