@@ -1,15 +1,7 @@
 <template>
-  <div
-    class="relative w-screen h-screen"
-    style="background-image: url('/assets/Background.png'); background-size: cover; background-position: center;"
-  >
-    <div class="absolute top-0 left-0 w-full">
-      <ScoreBoard :teams="teams" />
-      <QuestionDisplay :question="currentQuestion.question" />
-    </div>
-    <div class="mt-24">
-      <AnswersTable :answers="currentQuestion.answers" @reveal="handleReveal" />
-    </div>
+  <div class="flex flex-col min-h-[60vh] w-full items-center justify-start gap-6">
+    <QuestionDisplay :question="currentQuestion.question" />
+    <AnswersTable :answers="currentQuestion.answers" @reveal="handleReveal" />
     <InputZone :teams="teams" @submit="handleSubmit" />
   </div>
 </template>

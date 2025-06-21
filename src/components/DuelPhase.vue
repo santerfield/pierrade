@@ -1,7 +1,6 @@
 <template>
   <div
     class="relative w-screen h-screen"
-    style="background-image: url('/assets/Background.png'); background-size: cover; background-position: center;"
   >
     <!-- Interface dédiée pour la phase de Duel -->
     <div class="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-60">

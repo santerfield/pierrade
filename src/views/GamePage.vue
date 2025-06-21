@@ -7,35 +7,38 @@
       class="absolute inset-0 z-20"
     />
 
-    <!-- PHASE RAPIDE -->
-    <RapidPhase
-      v-if="currentPhase === 'rapid'"
-      :teams="teams"
-      :sharedQuestion="currentQuestion"
-      @finishRapid="handleFinishRapid"
-      class="flex-1 w-full"
-    />
+    <!-- CONTENU CENTRAL -->
+    <div class="flex-1 flex flex-col items-center justify-center w-full">
+      <div
+        class="w-full max-w-3xl mx-auto px-4 py-8 flex flex-col gap-6 items-center"
+        style="background: url('/assets/Background.png') center/cover no-repeat;"
+      >
+        <ScoreBoard :teams="teams" />
 
-    <!-- PHASE TOUR DE TABLE -->
-    <TurnPhase
-      v-else-if="currentPhase === 'turn'"
-      :teams="teams"
-      :sharedQuestion="currentQuestion"
-      @finishTurn="handleFinishTurn"
-      class="flex-1 w-full"
-    />
+        <QuestionDisplay :question="currentQuestion.question" class="w-full" />
 
-    <!-- PHASE DUEL -->
-    <DuelPhase
-      v-else-if="currentPhase === 'duel'"
-      :teams="teams"
-      @finishDuel="handleFinishDuel"
-      class="flex-1 w-full"
-    />
+        <!-- PHASE RAPID -->
+        <template v-if="currentPhase === 'rapid'">
+          <AnswersTable :answers="currentQuestion.answers" class="w-full" />
+          <InputZone
+            :teams="teams"
+            @submit="handleSubmitAnswer"
+            class="w-full"
+          />
+        </template>
 
-    <!-- Scoreboard toujours visible en bas -->
-    <div class="w-full max-w-3xl mx-auto px-4 py-2">
-      <ScoreBoard :teams="teams" />
+        <!-- PHASE TURN -->
+        <template v-else-if="currentPhase === 'turn'">
+          <AnswersTable :answers="currentQuestion.answers" class="w-full" />
+          <!-- Ajoute ici les composants spécifiques à la phase turn si besoin -->
+        </template>
+
+        <!-- PHASE DUEL -->
+        <template v-else-if="currentPhase === 'duel'">
+          <AnswersTable :answers="currentQuestion.answers" class="w-full" />
+          <!-- Ajoute ici les composants spécifiques à la phase duel si besoin -->
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -46,6 +49,9 @@ import TurnPhase from '../components/TurnPhase.vue';
 import DuelPhase from '../components/DuelPhase.vue';
 import CountdownTransition from '../components/CountdownTransition.vue';
 import ScoreBoard from '../components/ScoreBoard.vue';
+import QuestionDisplay from '../components/QuestionDisplay.vue';
+import AnswersTable from '../components/AnswersTable.vue';
+import InputZone from '../components/InputZone.vue';
 
 export default {
   name: 'GamePage',
@@ -54,7 +60,10 @@ export default {
     TurnPhase,
     DuelPhase,
     CountdownTransition,
-    ScoreBoard
+    ScoreBoard,
+    QuestionDisplay,
+    AnswersTable,
+    InputZone
   },
   props: {
     teams: {
@@ -87,17 +96,19 @@ export default {
       nextPhaseName: ''
     };
   },
+  watch: {
+    sharedQuestion(newQ) {
+      if (newQ) this.currentQuestion = newQ;
+    }
+  },
   methods: {
     handleFinishRapid(data) {
-      // Traite la fin de la phase rapide
       this.startTransition("turn");
     },
     handleFinishTurn(data) {
-      // Traite la fin de la phase tour de table
       this.startTransition("duel");
     },
     handleFinishDuel(data) {
-      // Traite la fin de la phase duel et termine la manche
       this.$emit("finishRound", data);
     },
     startTransition(nextPhase) {
@@ -107,6 +118,9 @@ export default {
     nextPhase() {
       this.currentPhase = this.nextPhaseName;
       this.showTransition = false;
+    },
+    handleSubmitAnswer(answer) {
+      // Logique pour gérer la soumission d'une réponse
     }
   }
 };
